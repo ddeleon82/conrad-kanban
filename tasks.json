@@ -20,31 +20,34 @@
       "id": "2",
       "title": "CloseBot Replacement - Product Design Doc",
       "description": "Design multi-channel follow-up app for client conversations. Integrates with GoHighLevel (SMS, email, social). Conversationally programmable behavior and prompts.",
-      "column": "in-progress",
+      "column": "done",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
+      "completedAt": "2026-01-26T04:05:00Z",
       "priority": "high",
-      "notes": "Sub-agent working on this"
+      "deliverable": "/clawd/docs/closebot-replacement-prd.md"
     },
     {
       "id": "3",
       "title": "Secure Password Sharing Solution",
       "description": "Research how Dom can securely share passwords from Proton Pass without exposing them in chat logs.",
-      "column": "in-progress",
+      "column": "done",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
+      "completedAt": "2026-01-26T03:55:00Z",
       "priority": "medium",
-      "notes": "Sub-agent working on this"
+      "deliverable": "/clawd/docs/secure-password-sharing.md"
     },
     {
       "id": "4",
       "title": "Client Dashboard - Product Design Doc",
       "description": "Interactive dashboard combining programmatic + Meta campaign stats. Client logins, daily updates. Research successful products in this space.",
-      "column": "in-progress",
+      "column": "done",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
+      "completedAt": "2026-01-26T04:10:00Z",
       "priority": "high",
-      "notes": "Sub-agent working on this"
+      "deliverable": "/clawd/docs/client-dashboard-prd.md"
     },
     {
       "id": "5",
@@ -54,7 +57,7 @@
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
       "priority": "medium",
-      "notes": "BLOCKED: Need conrad@freedomandcoffee.co Google credentials"
+      "notes": "BLOCKED: Need conrad@freedomandcoffee.co Google credentials - see secure password sharing doc for solution"
     },
     {
       "id": "6",
@@ -64,29 +67,38 @@
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
       "completedAt": "2026-01-26T03:50:00Z",
-      "priority": "medium"
+      "priority": "medium",
+      "deliverable": "/clawd/docs/10-ways-conrad-can-help.md"
     }
   ],
   "activity": [
+    {
+      "timestamp": "2026-01-26T04:10:00Z",
+      "action": "completed",
+      "taskId": "4",
+      "taskTitle": "Client Dashboard PRD",
+      "by": "conrad"
+    },
+    {
+      "timestamp": "2026-01-26T04:05:00Z",
+      "action": "completed",
+      "taskId": "2",
+      "taskTitle": "CloseBot Replacement PRD",
+      "by": "conrad"
+    },
+    {
+      "timestamp": "2026-01-26T03:55:00Z",
+      "action": "completed",
+      "taskId": "3",
+      "taskTitle": "Secure Password Sharing Research",
+      "by": "conrad"
+    },
     {
       "timestamp": "2026-01-26T03:50:00Z",
       "action": "completed",
       "taskId": "6",
       "taskTitle": "10 Ways Conrad Can Help Dom",
       "by": "conrad"
-    },
-    {
-      "timestamp": "2026-01-26T03:48:00Z",
-      "action": "spawned-subagents",
-      "taskIds": ["2", "3", "4"],
-      "by": "conrad"
-    },
-    {
-      "timestamp": "2026-01-26T03:47:00Z",
-      "action": "created",
-      "taskId": "2-6",
-      "taskTitle": "5 overnight tasks from Dom",
-      "by": "dom"
     }
   ]
 }
