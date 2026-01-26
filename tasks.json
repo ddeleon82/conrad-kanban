@@ -1,0 +1,29 @@
+{
+  "columns": [
+    { "id": "backlog", "name": "Backlog" },
+    { "id": "todo", "name": "To Do" },
+    { "id": "in-progress", "name": "In Progress" },
+    { "id": "done", "name": "Done" }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Build Kanban Board",
+      "description": "Create a task tracking system for Dom and Conrad",
+      "column": "done",
+      "assignee": "conrad",
+      "createdAt": "2026-01-26T03:30:00Z",
+      "completedAt": "2026-01-26T03:32:00Z",
+      "priority": "high"
+    }
+  ],
+  "activity": [
+    {
+      "timestamp": "2026-01-26T03:32:00Z",
+      "action": "completed",
+      "taskId": "1",
+      "taskTitle": "Build Kanban Board",
+      "by": "conrad"
+    }
+  ]
+}

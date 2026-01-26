@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conrad's Kanban | Freedom & Coffee</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #e4e4e7;
+    }
+    
+    header {
+      padding: 24px 32px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    header h1 span { font-size: 28px; }
+    
+    .stats {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+      color: #a1a1aa;
+    }
+    
+    .stats .stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .stats .stat-value {
+      color: #e4e4e7;
+      font-weight: 600;
+    }
+    
+    .board {
+      display: flex;
+      gap: 20px;
+      padding: 32px;
+      overflow-x: auto;
+      min-height: calc(100vh - 88px);
+    }
+    
+    .column {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      min-width: 300px;
+      max-width: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .column-header {
+      padding: 16px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .column-header .count {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    
+    .column[data-id="backlog"] .column-header { color: #a1a1aa; }
+    .column[data-id="todo"] .column-header { color: #60a5fa; }
+    .column[data-id="in-progress"] .column-header { color: #fbbf24; }
+    .column[data-id="done"] .column-header { color: #34d399; }
+    
+    .column-content {
+      padding: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .task {
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    
+    .task:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    
+    .task-title {
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    
+    .task-description {
+      font-size: 13px;
+      color: #a1a1aa;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    
+    .task-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    
+    .task-assignee {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #a1a1aa;
+    }
+    
+    .task-assignee .avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .task-assignee.dom .avatar {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+    }
+    
+    .task-priority {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .task-priority.high { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .task-priority.medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .task-priority.low { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+    
+    .activity-panel {
+      position: fixed;
+      right: 0;
+      top: 88px;
+      width: 350px;
+      height: calc(100vh - 88px);
+      background: rgba(0,0,0,0.5);
+      border-left: 1px solid rgba(255,255,255,0.1);
+      padding: 24px;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s;
+    }
+    
+    .activity-panel.open { transform: translateX(0); }
+    
+    .activity-panel h2 {
+      font-size: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .activity-item {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 13px;
+    }
+    
+    .activity-item:last-child { border-bottom: none; }
+    
+    .activity-time {
+      color: #71717a;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #71717a;
+    }
+    
+    .refresh-note {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #a1a1aa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>🎭</span> Conrad's Kanban</h1>
+    <div class="stats">
+      <div class="stat">
+        <span>Backlog:</span>
+        <span class="stat-value" id="stat-backlog">0</span>
+      </div>
+      <div class="stat">
+        <span>To Do:</span>
+        <span class="stat-value" id="stat-todo">0</span>
+      </div>
+      <div class="stat">
+        <span>In Progress:</span>
+        <span class="stat-value" id="stat-in-progress">0</span>
+      </div>
+      <div class="stat">
+        <span>Done:</span>
+        <span class="stat-value" id="stat-done">0</span>
+      </div>
+    </div>
+  </header>
+  
+  <div class="board" id="board"></div>
+  
+  <div class="refresh-note">
+    💡 Conrad updates this board as he works. Refresh to see latest.
+  </div>
+
+  <script>
+    async function loadBoard() {
+      try {
+        const res = await fetch('tasks.json?' + Date.now());
+        const data = await res.json();
+        renderBoard(data);
+      } catch (err) {
+        console.error('Failed to load tasks:', err);
+      }
+    }
+    
+    function renderBoard(data) {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      
+      const tasksByColumn = {};
+      data.columns.forEach(col => tasksByColumn[col.id] = []);
+      data.tasks.forEach(task => {
+        if (tasksByColumn[task.column]) {
+          tasksByColumn[task.column].push(task);
+        }
+      });
+      
+      // Update stats
+      data.columns.forEach(col => {
+        const statEl = document.getElementById('stat-' + col.id);
+        if (statEl) statEl.textContent = tasksByColumn[col.id].length;
+      });
+      
+      data.columns.forEach(col => {
+        const column = document.createElement('div');
+        column.className = 'column';
+        column.dataset.id = col.id;
+        
+        const tasks = tasksByColumn[col.id];
+        
+        column.innerHTML = `
+          <div class="column-header">
+            <span>${col.name}</span>
+            <span class="count">${tasks.length}</span>
+          </div>
+          <div class="column-content">
+            ${tasks.length === 0 ? '<div class="empty-state">No tasks</div>' : ''}
+            ${tasks.map(task => `
+              <div class="task" data-id="${task.id}">
+                <div class="task-title">${task.title}</div>
+                ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                <div class="task-meta">
+                  <div class="task-assignee ${task.assignee}">
+                    <div class="avatar">${task.assignee === 'conrad' ? '🎭' : 'D'}</div>
+                    <span>${task.assignee === 'conrad' ? 'Conrad' : 'Dom'}</span>
+                  </div>
+                  ${task.priority ? `<span class="task-priority ${task.priority}">${task.priority}</span>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        
+        board.appendChild(column);
+      });
+    }
+    
+    loadBoard();
+    // Auto-refresh every 30 seconds
+    setInterval(loadBoard, 30000);
+  </script>
+</body>
+</html>
