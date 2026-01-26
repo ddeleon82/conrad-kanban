@@ -23,7 +23,8 @@
       "column": "in-progress",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
-      "priority": "high"
+      "priority": "high",
+      "notes": "Sub-agent working on this"
     },
     {
       "id": "3",
@@ -32,7 +33,8 @@
       "column": "in-progress",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
-      "priority": "medium"
+      "priority": "medium",
+      "notes": "Sub-agent working on this"
     },
     {
       "id": "4",
@@ -41,7 +43,8 @@
       "column": "in-progress",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
-      "priority": "high"
+      "priority": "high",
+      "notes": "Sub-agent working on this"
     },
     {
       "id": "5",
@@ -50,19 +53,34 @@
       "column": "todo",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
-      "priority": "medium"
+      "priority": "medium",
+      "notes": "BLOCKED: Need conrad@freedomandcoffee.co Google credentials"
     },
     {
       "id": "6",
       "title": "10 Ways Conrad Can Help Dom",
       "description": "Based on Dom's interests, business, and context - identify 10 high-value ways to assist.",
-      "column": "in-progress",
+      "column": "done",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:47:00Z",
+      "completedAt": "2026-01-26T03:50:00Z",
       "priority": "medium"
     }
   ],
   "activity": [
+    {
+      "timestamp": "2026-01-26T03:50:00Z",
+      "action": "completed",
+      "taskId": "6",
+      "taskTitle": "10 Ways Conrad Can Help Dom",
+      "by": "conrad"
+    },
+    {
+      "timestamp": "2026-01-26T03:48:00Z",
+      "action": "spawned-subagents",
+      "taskIds": ["2", "3", "4"],
+      "by": "conrad"
+    },
     {
       "timestamp": "2026-01-26T03:47:00Z",
       "action": "created",
