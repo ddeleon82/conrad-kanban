@@ -49,7 +49,7 @@
       "column": "todo",
       "assignee": "conrad",
       "priority": "medium",
-      "notes": "BLOCKED: Need Notion API integration"
+      "notes": "UNBLOCKED: Notion API connected"
     },
     {
       "id": "6",
@@ -82,9 +82,11 @@
       "id": "9",
       "title": "Set up Notion API for Conrad",
       "description": "Create integration, get API key, share relevant pages",
-      "column": "todo",
+      "column": "done",
       "assignee": "dom",
-      "priority": "medium"
+      "completedAt": "2026-01-26T22:04:00Z",
+      "priority": "medium",
+      "deliverable": "Notion integration 'Conrad' connected to Freedom & Coffee workspace"
     },
     {
       "id": "10",
