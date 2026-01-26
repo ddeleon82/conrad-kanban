@@ -23,7 +23,7 @@
       "assignee": "conrad",
       "completedAt": "2026-01-26T04:05:00Z",
       "priority": "high",
-      "deliverable": "/clawd/docs/closebot-replacement-prd.md"
+      "deliverable": "https://github.com/ddeleon82/conrad-kanban/blob/main/docs/closebot-replacement-prd.md"
     },
     {
       "id": "3",
@@ -32,7 +32,7 @@
       "assignee": "conrad",
       "completedAt": "2026-01-26T03:55:00Z",
       "priority": "medium",
-      "deliverable": "/clawd/docs/secure-password-sharing.md"
+      "deliverable": "https://github.com/ddeleon82/conrad-kanban/blob/main/docs/secure-password-sharing.md"
     },
     {
       "id": "4",
@@ -41,7 +41,7 @@
       "assignee": "conrad",
       "completedAt": "2026-01-26T04:10:00Z",
       "priority": "high",
-      "deliverable": "/clawd/docs/client-dashboard-prd.md"
+      "deliverable": "https://github.com/ddeleon82/conrad-kanban/blob/main/docs/client-dashboard-prd.md"
     },
     {
       "id": "5",
@@ -58,7 +58,7 @@
       "assignee": "conrad",
       "completedAt": "2026-01-26T03:50:00Z",
       "priority": "medium",
-      "deliverable": "/clawd/docs/10-ways-conrad-can-help.md"
+      "deliverable": "https://github.com/ddeleon82/conrad-kanban/blob/main/docs/10-ways-conrad-can-help.md"
     },
     {
       "id": "7",
@@ -68,7 +68,7 @@
       "assignee": "conrad",
       "completedAt": "2026-01-26T04:15:00Z",
       "priority": "high",
-      "deliverable": "/clawd/docs/terreform-sizzle-script.md"
+      "deliverable": "https://github.com/ddeleon82/conrad-kanban/blob/main/docs/terreform-sizzle-script.md"
     },
     {
       "id": "8",
