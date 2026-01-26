@@ -46,10 +46,11 @@
     {
       "id": "5",
       "title": "Notion Agency Dashboard Review",
-      "column": "todo",
+      "column": "done",
       "assignee": "conrad",
+      "completedAt": "2026-01-26T22:20:00Z",
       "priority": "medium",
-      "notes": "UNBLOCKED: Notion API connected"
+      "deliverable": "https://github.com/ddeleon82/conrad-kanban/blob/main/docs/notion-dashboard-review.md"
     },
     {
       "id": "6",
