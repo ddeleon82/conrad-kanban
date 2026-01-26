@@ -171,42 +171,10 @@
     .task-priority.medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
     .task-priority.low { background: rgba(52, 211, 153, 0.2); color: #34d399; }
     
-    .activity-panel {
-      position: fixed;
-      right: 0;
-      top: 88px;
-      width: 350px;
-      height: calc(100vh - 88px);
-      background: rgba(0,0,0,0.5);
-      border-left: 1px solid rgba(255,255,255,0.1);
-      padding: 24px;
-      overflow-y: auto;
-      transform: translateX(100%);
-      transition: transform 0.3s;
-    }
-    
-    .activity-panel.open { transform: translateX(0); }
-    
-    .activity-panel h2 {
-      font-size: 16px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .activity-item {
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      font-size: 13px;
-    }
-    
-    .activity-item:last-child { border-bottom: none; }
-    
-    .activity-time {
-      color: #71717a;
+    .task-comment-indicator {
+      margin-left: 8px;
       font-size: 11px;
-      margin-top: 4px;
+      color: #60a5fa;
     }
     
     .empty-state {
@@ -225,6 +193,294 @@
       border-radius: 8px;
       font-size: 13px;
       color: #a1a1aa;
+    }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background: #1e1e2e;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255,255,255,0.1);
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+    
+    .modal-overlay.open .modal {
+      transform: scale(1);
+    }
+    
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .modal-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .modal-header .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .modal-header .status-badge.todo { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+    .modal-header .status-badge.in-progress { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .modal-header .status-badge.done { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+    .modal-header .status-badge.backlog { background: rgba(161, 161, 170, 0.2); color: #a1a1aa; }
+    
+    .modal-close {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #a1a1aa;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    
+    .modal-section {
+      margin-bottom: 24px;
+    }
+    
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .modal-section h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #71717a;
+      margin-bottom: 12px;
+    }
+    
+    .modal-section p {
+      color: #a1a1aa;
+      line-height: 1.6;
+    }
+    
+    .deliverable-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #818cf8;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .deliverable-link:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+    
+    .deliverable-link .icon {
+      font-size: 20px;
+    }
+    
+    .deliverable-link .path {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+    }
+    
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .comment {
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .comment-author {
+      font-weight: 500;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .comment-author .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    
+    .comment-time {
+      font-size: 11px;
+      color: #71717a;
+    }
+    
+    .comment-text {
+      color: #d4d4d8;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .comment-form textarea {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 12px;
+      color: #e4e4e7;
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .comment-form textarea:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+    
+    .comment-form textarea::placeholder {
+      color: #71717a;
+    }
+    
+    .comment-form button {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .comment-form button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    
+    .no-comments {
+      color: #71717a;
+      font-size: 14px;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    
+    .meta-item {
+      background: rgba(255,255,255,0.03);
+      padding: 12px;
+      border-radius: 8px;
+    }
+    
+    .meta-item label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #71717a;
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .meta-item value {
+      font-size: 14px;
+      color: #e4e4e7;
+    }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #34d399;
+      color: #0f172a;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1001;
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
   </style>
 </head>
@@ -256,16 +512,96 @@
   <div class="refresh-note">
     💡 Conrad updates this board as he works. Refresh to see latest.
   </div>
+  
+  <!-- Task Detail Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="modal-title">Task Title</h2>
+          <span class="status-badge" id="modal-status">Status</span>
+        </div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section" id="modal-description-section">
+          <h3>Description</h3>
+          <p id="modal-description"></p>
+        </div>
+        
+        <div class="modal-section" id="modal-deliverable-section">
+          <h3>Deliverable</h3>
+          <a href="#" class="deliverable-link" id="modal-deliverable" target="_blank">
+            <span class="icon">📄</span>
+            <span class="path" id="modal-deliverable-path"></span>
+          </a>
+        </div>
+        
+        <div class="modal-section">
+          <h3>Details</h3>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <label>Assignee</label>
+              <value id="modal-assignee">-</value>
+            </div>
+            <div class="meta-item">
+              <label>Priority</label>
+              <value id="modal-priority">-</value>
+            </div>
+            <div class="meta-item" id="modal-completed-section">
+              <label>Completed</label>
+              <value id="modal-completed">-</value>
+            </div>
+            <div class="meta-item" id="modal-notes-section">
+              <label>Notes</label>
+              <value id="modal-notes">-</value>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-section">
+          <h3>Comments</h3>
+          <div class="comments-list" id="comments-list">
+            <div class="no-comments">No comments yet</div>
+          </div>
+          <div class="comment-form">
+            <textarea id="comment-input" placeholder="Add a comment... (this will move the task back to To Do)"></textarea>
+            <button onclick="addComment()">Add Comment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast">Comment added! Task moved to To Do.</div>
 
   <script>
+    let boardData = null;
+    let currentTaskId = null;
+    let localComments = JSON.parse(localStorage.getItem('kanban-comments') || '{}');
+    
     async function loadBoard() {
       try {
         const res = await fetch('tasks.json?' + Date.now());
-        const data = await res.json();
-        renderBoard(data);
+        boardData = await res.json();
+        renderBoard(boardData);
       } catch (err) {
         console.error('Failed to load tasks:', err);
       }
+    }
+    
+    function getTaskComments(taskId) {
+      const serverComments = boardData.tasks.find(t => t.id === taskId)?.comments || [];
+      const local = localComments[taskId] || [];
+      return [...serverComments, ...local].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    }
+    
+    function getEffectiveColumn(task) {
+      // If there are local comments, task should be in "todo"
+      if (localComments[task.id] && localComments[task.id].length > 0) {
+        return 'todo';
+      }
+      return task.column;
     }
     
     function renderBoard(data) {
@@ -274,9 +610,11 @@
       
       const tasksByColumn = {};
       data.columns.forEach(col => tasksByColumn[col.id] = []);
+      
       data.tasks.forEach(task => {
-        if (tasksByColumn[task.column]) {
-          tasksByColumn[task.column].push(task);
+        const effectiveColumn = getEffectiveColumn(task);
+        if (tasksByColumn[effectiveColumn]) {
+          tasksByColumn[effectiveColumn].push({...task, effectiveColumn});
         }
       });
       
@@ -300,25 +638,183 @@
           </div>
           <div class="column-content">
             ${tasks.length === 0 ? '<div class="empty-state">No tasks</div>' : ''}
-            ${tasks.map(task => `
-              <div class="task" data-id="${task.id}">
-                <div class="task-title">${task.title}</div>
-                ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
-                <div class="task-meta">
-                  <div class="task-assignee ${task.assignee}">
-                    <div class="avatar">${task.assignee === 'conrad' ? '🎭' : 'D'}</div>
-                    <span>${task.assignee === 'conrad' ? 'Conrad' : 'Dom'}</span>
+            ${tasks.map(task => {
+              const comments = getTaskComments(task.id);
+              const hasComments = comments.length > 0;
+              return `
+                <div class="task" data-id="${task.id}" onclick="openModal('${task.id}')">
+                  <div class="task-title">
+                    ${task.title}
+                    ${hasComments ? `<span class="task-comment-indicator">💬 ${comments.length}</span>` : ''}
                   </div>
-                  ${task.priority ? `<span class="task-priority ${task.priority}">${task.priority}</span>` : ''}
+                  ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                  <div class="task-meta">
+                    <div class="task-assignee ${task.assignee}">
+                      <div class="avatar">${task.assignee === 'conrad' ? '🎭' : 'D'}</div>
+                      <span>${task.assignee === 'conrad' ? 'Conrad' : 'Dom'}</span>
+                    </div>
+                    ${task.priority ? `<span class="task-priority ${task.priority}">${task.priority}</span>` : ''}
+                  </div>
                 </div>
-              </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
         `;
         
         board.appendChild(column);
       });
     }
+    
+    function openModal(taskId) {
+      currentTaskId = taskId;
+      const task = boardData.tasks.find(t => t.id === taskId);
+      if (!task) return;
+      
+      const effectiveColumn = getEffectiveColumn(task);
+      
+      document.getElementById('modal-title').textContent = task.title;
+      
+      const statusBadge = document.getElementById('modal-status');
+      statusBadge.textContent = effectiveColumn.replace('-', ' ');
+      statusBadge.className = 'status-badge ' + effectiveColumn;
+      
+      // Description
+      const descSection = document.getElementById('modal-description-section');
+      if (task.description) {
+        descSection.style.display = 'block';
+        document.getElementById('modal-description').textContent = task.description;
+      } else {
+        descSection.style.display = 'none';
+      }
+      
+      // Deliverable
+      const delivSection = document.getElementById('modal-deliverable-section');
+      if (task.deliverable) {
+        delivSection.style.display = 'block';
+        const delivLink = document.getElementById('modal-deliverable');
+        const delivPath = document.getElementById('modal-deliverable-path');
+        
+        // Convert local path to GitHub raw URL
+        const githubBase = 'https://github.com/ddeleon82/conrad-kanban/blob/main';
+        const repoBase = 'https://raw.githubusercontent.com/ddeleon82/conrad-kanban/main';
+        
+        if (task.deliverable.startsWith('/clawd/')) {
+          // Link to the main clawd repo docs
+          const docPath = task.deliverable.replace('/clawd/', '');
+          delivLink.href = `https://github.com/ddeleon82/clawd/blob/main/${docPath}`;
+        } else {
+          delivLink.href = task.deliverable;
+        }
+        delivPath.textContent = task.deliverable;
+      } else {
+        delivSection.style.display = 'none';
+      }
+      
+      // Meta
+      document.getElementById('modal-assignee').textContent = task.assignee === 'conrad' ? '🎭 Conrad' : '👤 Dom';
+      document.getElementById('modal-priority').textContent = task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : '-';
+      
+      const completedSection = document.getElementById('modal-completed-section');
+      if (task.completedAt) {
+        completedSection.style.display = 'block';
+        document.getElementById('modal-completed').textContent = new Date(task.completedAt).toLocaleDateString();
+      } else {
+        completedSection.style.display = 'none';
+      }
+      
+      const notesSection = document.getElementById('modal-notes-section');
+      if (task.notes) {
+        notesSection.style.display = 'block';
+        document.getElementById('modal-notes').textContent = task.notes;
+      } else {
+        notesSection.style.display = 'none';
+      }
+      
+      // Comments
+      renderComments(taskId);
+      
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+    
+    function renderComments(taskId) {
+      const commentsList = document.getElementById('comments-list');
+      const comments = getTaskComments(taskId);
+      
+      if (comments.length === 0) {
+        commentsList.innerHTML = '<div class="no-comments">No comments yet</div>';
+        return;
+      }
+      
+      commentsList.innerHTML = comments.map(c => `
+        <div class="comment">
+          <div class="comment-header">
+            <div class="comment-author">
+              <span class="avatar">${c.author === 'conrad' ? '🎭' : 'D'}</span>
+              ${c.author === 'conrad' ? 'Conrad' : 'Dom'}
+            </div>
+            <span class="comment-time">${formatTime(c.timestamp)}</span>
+          </div>
+          <div class="comment-text">${c.text}</div>
+        </div>
+      `).join('');
+    }
+    
+    function formatTime(timestamp) {
+      const d = new Date(timestamp);
+      return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+    
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.getElementById('comment-input').value = '';
+      currentTaskId = null;
+    }
+    
+    function addComment() {
+      const input = document.getElementById('comment-input');
+      const text = input.value.trim();
+      if (!text || !currentTaskId) return;
+      
+      const comment = {
+        author: 'dom',
+        text: text,
+        timestamp: new Date().toISOString()
+      };
+      
+      if (!localComments[currentTaskId]) {
+        localComments[currentTaskId] = [];
+      }
+      localComments[currentTaskId].push(comment);
+      localStorage.setItem('kanban-comments', JSON.stringify(localComments));
+      
+      input.value = '';
+      renderComments(currentTaskId);
+      renderBoard(boardData); // Re-render to move task to To Do
+      
+      // Update modal status badge
+      const statusBadge = document.getElementById('modal-status');
+      statusBadge.textContent = 'to do';
+      statusBadge.className = 'status-badge todo';
+      
+      // Show toast
+      showToast();
+    }
+    
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+    
+    // Close modal on overlay click
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
     
     loadBoard();
     // Auto-refresh every 30 seconds
