@@ -9,42 +9,34 @@
     {
       "id": "1",
       "title": "Build Kanban Board",
-      "description": "Create a task tracking system for Dom and Conrad",
       "column": "done",
       "assignee": "conrad",
-      "createdAt": "2026-01-26T03:30:00Z",
       "completedAt": "2026-01-26T03:35:00Z",
       "priority": "high"
     },
     {
       "id": "2",
-      "title": "CloseBot Replacement - Product Design Doc",
-      "description": "Design multi-channel follow-up app for client conversations. Integrates with GoHighLevel (SMS, email, social). Conversationally programmable behavior and prompts.",
+      "title": "CloseBot Replacement - PRD",
       "column": "done",
       "assignee": "conrad",
-      "createdAt": "2026-01-26T03:47:00Z",
       "completedAt": "2026-01-26T04:05:00Z",
       "priority": "high",
       "deliverable": "/clawd/docs/closebot-replacement-prd.md"
     },
     {
       "id": "3",
-      "title": "Secure Password Sharing Solution",
-      "description": "Research how Dom can securely share passwords from Proton Pass without exposing them in chat logs.",
+      "title": "Secure Password Sharing Research",
       "column": "done",
       "assignee": "conrad",
-      "createdAt": "2026-01-26T03:47:00Z",
       "completedAt": "2026-01-26T03:55:00Z",
       "priority": "medium",
       "deliverable": "/clawd/docs/secure-password-sharing.md"
     },
     {
       "id": "4",
-      "title": "Client Dashboard - Product Design Doc",
-      "description": "Interactive dashboard combining programmatic + Meta campaign stats. Client logins, daily updates. Research successful products in this space.",
+      "title": "Client Dashboard - PRD",
       "column": "done",
       "assignee": "conrad",
-      "createdAt": "2026-01-26T03:47:00Z",
       "completedAt": "2026-01-26T04:10:00Z",
       "priority": "high",
       "deliverable": "/clawd/docs/client-dashboard-prd.md"
@@ -52,52 +44,61 @@
     {
       "id": "5",
       "title": "Notion Agency Dashboard Review",
-      "description": "Login to Notion via invite, browse agency dashboard, prepare questions for Dom.",
       "column": "todo",
       "assignee": "conrad",
-      "createdAt": "2026-01-26T03:47:00Z",
       "priority": "medium",
-      "notes": "BLOCKED: Need conrad@freedomandcoffee.co Google credentials - see secure password sharing doc for solution"
+      "notes": "BLOCKED: Need Notion API integration"
     },
     {
       "id": "6",
       "title": "10 Ways Conrad Can Help Dom",
-      "description": "Based on Dom's interests, business, and context - identify 10 high-value ways to assist.",
       "column": "done",
       "assignee": "conrad",
-      "createdAt": "2026-01-26T03:47:00Z",
       "completedAt": "2026-01-26T03:50:00Z",
       "priority": "medium",
       "deliverable": "/clawd/docs/10-ways-conrad-can-help.md"
+    },
+    {
+      "id": "7",
+      "title": "Terreform Sizzle Reel Script",
+      "description": "2-minute 'What If' script for Terreform ONE nonprofit. Research + script + Frameset reference terms.",
+      "column": "done",
+      "assignee": "conrad",
+      "completedAt": "2026-01-26T04:15:00Z",
+      "priority": "high",
+      "deliverable": "/clawd/docs/terreform-sizzle-script.md"
+    },
+    {
+      "id": "8",
+      "title": "Set up Daily Digest System",
+      "description": "Create automated morning digest: high-value tasks, responses needed, calendar summary",
+      "column": "todo",
+      "assignee": "conrad",
+      "priority": "high"
+    },
+    {
+      "id": "9",
+      "title": "Set up Notion API for Conrad",
+      "description": "Create integration, get API key, share relevant pages",
+      "column": "todo",
+      "assignee": "dom",
+      "priority": "medium"
+    },
+    {
+      "id": "10",
+      "title": "Pull Frameset Reference Stills",
+      "description": "Complete Frameset login, search terms in script doc",
+      "column": "todo",
+      "assignee": "dom",
+      "priority": "medium"
     }
   ],
   "activity": [
     {
-      "timestamp": "2026-01-26T04:10:00Z",
+      "timestamp": "2026-01-26T04:15:00Z",
       "action": "completed",
-      "taskId": "4",
-      "taskTitle": "Client Dashboard PRD",
-      "by": "conrad"
-    },
-    {
-      "timestamp": "2026-01-26T04:05:00Z",
-      "action": "completed",
-      "taskId": "2",
-      "taskTitle": "CloseBot Replacement PRD",
-      "by": "conrad"
-    },
-    {
-      "timestamp": "2026-01-26T03:55:00Z",
-      "action": "completed",
-      "taskId": "3",
-      "taskTitle": "Secure Password Sharing Research",
-      "by": "conrad"
-    },
-    {
-      "timestamp": "2026-01-26T03:50:00Z",
-      "action": "completed",
-      "taskId": "6",
-      "taskTitle": "10 Ways Conrad Can Help Dom",
+      "taskId": "7",
+      "taskTitle": "Terreform Sizzle Script",
       "by": "conrad"
     }
   ]
