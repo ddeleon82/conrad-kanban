@@ -13,17 +13,62 @@
       "column": "done",
       "assignee": "conrad",
       "createdAt": "2026-01-26T03:30:00Z",
-      "completedAt": "2026-01-26T03:32:00Z",
+      "completedAt": "2026-01-26T03:35:00Z",
       "priority": "high"
+    },
+    {
+      "id": "2",
+      "title": "CloseBot Replacement - Product Design Doc",
+      "description": "Design multi-channel follow-up app for client conversations. Integrates with GoHighLevel (SMS, email, social). Conversationally programmable behavior and prompts.",
+      "column": "in-progress",
+      "assignee": "conrad",
+      "createdAt": "2026-01-26T03:47:00Z",
+      "priority": "high"
+    },
+    {
+      "id": "3",
+      "title": "Secure Password Sharing Solution",
+      "description": "Research how Dom can securely share passwords from Proton Pass without exposing them in chat logs.",
+      "column": "in-progress",
+      "assignee": "conrad",
+      "createdAt": "2026-01-26T03:47:00Z",
+      "priority": "medium"
+    },
+    {
+      "id": "4",
+      "title": "Client Dashboard - Product Design Doc",
+      "description": "Interactive dashboard combining programmatic + Meta campaign stats. Client logins, daily updates. Research successful products in this space.",
+      "column": "in-progress",
+      "assignee": "conrad",
+      "createdAt": "2026-01-26T03:47:00Z",
+      "priority": "high"
+    },
+    {
+      "id": "5",
+      "title": "Notion Agency Dashboard Review",
+      "description": "Login to Notion via invite, browse agency dashboard, prepare questions for Dom.",
+      "column": "todo",
+      "assignee": "conrad",
+      "createdAt": "2026-01-26T03:47:00Z",
+      "priority": "medium"
+    },
+    {
+      "id": "6",
+      "title": "10 Ways Conrad Can Help Dom",
+      "description": "Based on Dom's interests, business, and context - identify 10 high-value ways to assist.",
+      "column": "in-progress",
+      "assignee": "conrad",
+      "createdAt": "2026-01-26T03:47:00Z",
+      "priority": "medium"
     }
   ],
   "activity": [
     {
-      "timestamp": "2026-01-26T03:32:00Z",
-      "action": "completed",
-      "taskId": "1",
-      "taskTitle": "Build Kanban Board",
-      "by": "conrad"
+      "timestamp": "2026-01-26T03:47:00Z",
+      "action": "created",
+      "taskId": "2-6",
+      "taskTitle": "5 overnight tasks from Dom",
+      "by": "dom"
     }
   ]
 }
