@@ -12,7 +12,9 @@
       "column": "done",
       "assignee": "conrad",
       "completedAt": "2026-01-26T03:35:00Z",
-      "priority": "high"
+      "priority": "high",
+      "deliverable": "https://ddeleon82.github.io/conrad-kanban",
+      "notes": "Live kanban board with drag-drop, dark mode, priority badges. Local: /clawd/kanban/"
     },
     {
       "id": "2",
