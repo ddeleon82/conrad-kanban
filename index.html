@@ -634,10 +634,10 @@
 
   <script>
     // Supabase config
-    const SUPABASE_URL = 'https://sgcynfmkhqowdboweahz.supabase.co';
+    const SUPABASE_URL = 'https://sgcynfmkhqowdboweahz.db.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnY3luZm1raHFvd2Rib3dlYWh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3Nzg0OTYsImV4cCI6MjA4NDM1NDQ5Nn0.adsPZ0U_Ce2oM7MWaczBN9sqjVGhFfaht01eBktD6As';
     
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const db = window.db.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     const columns = [
       { id: 'backlog', name: 'Backlog' },
@@ -666,7 +666,7 @@
       let data;
       try {
         console.log('Fetching from Supabase...');
-        const response = await supabase
+        const response = await db
           .from('tasks')
           .select('*')
           .order('created_at', { ascending: true });
@@ -706,7 +706,7 @@
     
     // Load all comments
     async function loadAllComments() {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('comments')
         .select('*')
         .order('created_at', { ascending: true });
@@ -892,7 +892,7 @@
       btn.disabled = true;
       btn.textContent = 'Saving...';
       
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from('comments')
         .insert({
           task_id: currentTaskId,
