@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Conrad's Kanban | Freedom & Coffee</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -33,37 +32,6 @@
     }
     
     header h1 span { font-size: 28px; }
-    
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-    
-    .sync-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #71717a;
-    }
-    
-    .sync-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #71717a;
-      transition: background 0.3s;
-    }
-    
-    .sync-dot.connected { background: #34d399; }
-    .sync-dot.syncing { background: #fbbf24; animation: pulse 1s infinite; }
-    .sync-dot.error { background: #f87171; }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
     
     .stats {
       display: flex;
@@ -145,15 +113,6 @@
       background: rgba(255,255,255,0.12);
       border-color: rgba(255,255,255,0.2);
       transform: translateY(-2px);
-    }
-    
-    .task.highlight {
-      animation: highlight 2s ease-out;
-    }
-    
-    @keyframes highlight {
-      0% { border-color: #6366f1; box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
-      100% { border-color: transparent; box-shadow: none; }
     }
     
     .task-title {
@@ -353,9 +312,10 @@
     .deliverable-link {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       background: rgba(99, 102, 241, 0.1);
-      padding: 16px;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 12px 16px;
       border-radius: 8px;
       color: #818cf8;
       text-decoration: none;
@@ -364,44 +324,44 @@
     
     .deliverable-link:hover {
       background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.5);
     }
     
     .deliverable-link .icon {
-      font-size: 24px;
+      font-size: 20px;
     }
     
     .deliverable-link .path {
+      font-family: 'SF Mono', Monaco, monospace;
       font-size: 13px;
-      word-break: break-all;
     }
     
     .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
       margin-bottom: 16px;
     }
     
     .comment {
-      background: rgba(255,255,255,0.03);
-      padding: 16px;
+      background: rgba(255,255,255,0.05);
       border-radius: 8px;
-      margin-bottom: 12px;
-    }
-    
-    .comment:last-child {
-      margin-bottom: 0;
+      padding: 12px 16px;
     }
     
     .comment-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
     }
     
     .comment-author {
+      font-weight: 500;
+      font-size: 14px;
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 500;
-      font-size: 14px;
     }
     
     .comment-author .avatar {
@@ -416,13 +376,13 @@
     }
     
     .comment-time {
-      font-size: 12px;
+      font-size: 11px;
       color: #71717a;
     }
     
     .comment-text {
+      color: #d4d4d8;
       font-size: 14px;
-      color: #a1a1aa;
       line-height: 1.5;
     }
     
@@ -433,11 +393,10 @@
     }
     
     .comment-form textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
       background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 12px;
       color: #e4e4e7;
       font-family: inherit;
       font-size: 14px;
@@ -469,12 +428,6 @@
     .comment-form button:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-    }
-    
-    .comment-form button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
     }
     
     .no-comments {
@@ -529,37 +482,27 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
-    
-    .toast.error {
-      background: #f87171;
-    }
   </style>
 </head>
 <body>
   <header>
     <h1><span>🎭</span> Conrad's Kanban</h1>
-    <div class="header-right">
-      <div class="sync-status">
-        <div class="sync-dot" id="sync-dot"></div>
-        <span id="sync-text">Connecting...</span>
+    <div class="stats">
+      <div class="stat">
+        <span>Backlog:</span>
+        <span class="stat-value" id="stat-backlog">0</span>
       </div>
-      <div class="stats">
-        <div class="stat">
-          <span>Backlog:</span>
-          <span class="stat-value" id="stat-backlog">0</span>
-        </div>
-        <div class="stat">
-          <span>To Do:</span>
-          <span class="stat-value" id="stat-todo">0</span>
-        </div>
-        <div class="stat">
-          <span>In Progress:</span>
-          <span class="stat-value" id="stat-in-progress">0</span>
-        </div>
-        <div class="stat">
-          <span>Done:</span>
-          <span class="stat-value" id="stat-done">0</span>
-        </div>
+      <div class="stat">
+        <span>To Do:</span>
+        <span class="stat-value" id="stat-todo">0</span>
+      </div>
+      <div class="stat">
+        <span>In Progress:</span>
+        <span class="stat-value" id="stat-in-progress">0</span>
+      </div>
+      <div class="stat">
+        <span>Done:</span>
+        <span class="stat-value" id="stat-done">0</span>
       </div>
     </div>
   </header>
@@ -567,7 +510,7 @@
   <div class="board" id="board"></div>
   
   <div class="refresh-note">
-    ⚡ Real-time sync enabled — changes appear instantly
+    💡 Conrad updates this board as he works. Refresh to see latest.
   </div>
   
   <!-- Task Detail Modal -->
@@ -622,140 +565,87 @@
             <div class="no-comments">No comments yet</div>
           </div>
           <div class="comment-form">
-            <textarea id="comment-input" placeholder="Add a comment..."></textarea>
-            <button onclick="addComment()" id="comment-btn">Add Comment</button>
+            <textarea id="comment-input" placeholder="Add a comment... (this will move the task back to To Do)"></textarea>
+            <button onclick="addComment()">Add Comment</button>
           </div>
         </div>
       </div>
     </div>
   </div>
   
-  <div class="toast" id="toast">Comment added!</div>
+  <div class="toast" id="toast">Comment added! Task moved to To Do.</div>
 
   <script>
-    // Supabase config
-    const SUPABASE_URL = 'https://sgcynfmkhqowdboweahz.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnY3luZm1raHFvd2Rib3dlYWh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3Nzg0OTYsImV4cCI6MjA4NDM1NDQ5Nn0.adsPZ0U_Ce2oM7MWaczBN9sqjVGhFfaht01eBktD6As';
-    
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
-    const columns = [
-      { id: 'backlog', name: 'Backlog' },
-      { id: 'todo', name: 'To Do' },
-      { id: 'in-progress', name: 'In Progress' },
-      { id: 'done', name: 'Done' }
-    ];
-    
-    let tasks = [];
-    let comments = {};
+    let boardData = null;
     let currentTaskId = null;
+    let localComments = JSON.parse(localStorage.getItem('kanban-comments') || '{}');
     
-    // Update sync status UI
-    function setSyncStatus(status, text) {
-      const dot = document.getElementById('sync-dot');
-      const textEl = document.getElementById('sync-text');
-      dot.className = 'sync-dot ' + status;
-      textEl.textContent = text;
-    }
-    
-    // Load all tasks from Supabase
-    async function loadTasks() {
-      setSyncStatus('syncing', 'Loading...');
-      
-      const { data, error } = await supabaseClient
-        .from('tasks')
-        .select('*')
-        .order('created_at', { ascending: true });
-      
-      if (error) {
-        console.error('Error loading tasks:', error);
-        setSyncStatus('error', 'Connection error');
-        showToast('Failed to load tasks', true);
-        return;
+    async function loadBoard() {
+      try {
+        const res = await fetch('tasks.json?' + Date.now());
+        boardData = await res.json();
+        renderBoard(boardData);
+      } catch (err) {
+        console.error('Failed to load tasks:', err);
       }
-      
-      tasks = data.map(t => ({
-        id: t.id,
-        title: t.title,
-        description: t.description,
-        column: t.column_id,
-        assignee: t.assignee,
-        priority: t.priority,
-        deliverable: t.deliverable,
-        notes: t.notes,
-        completedAt: t.completed_at
-      }));
-      
-      await loadAllComments();
-      renderBoard();
-      setSyncStatus('connected', 'Real-time sync');
     }
     
-    // Load all comments
-    async function loadAllComments() {
-      const { data, error } = await supabaseClient
-        .from('comments')
-        .select('*')
-        .order('created_at', { ascending: true });
-      
-      if (error) {
-        console.error('Error loading comments:', error);
-        return;
+    function getTaskComments(taskId) {
+      const serverComments = boardData.tasks.find(t => t.id === taskId)?.comments || [];
+      const local = localComments[taskId] || [];
+      return [...serverComments, ...local].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    }
+    
+    function getEffectiveColumn(task) {
+      // If there are local comments, task should be in "todo"
+      if (localComments[task.id] && localComments[task.id].length > 0) {
+        return 'todo';
       }
-      
-      comments = {};
-      data.forEach(c => {
-        if (!comments[c.task_id]) comments[c.task_id] = [];
-        comments[c.task_id].push({
-          id: c.id,
-          author: c.author,
-          text: c.text,
-          timestamp: c.created_at
-        });
-      });
+      return task.column;
     }
     
-    // Render the board
-    function renderBoard() {
+    function renderBoard(data) {
       const board = document.getElementById('board');
       board.innerHTML = '';
       
       const tasksByColumn = {};
-      columns.forEach(col => tasksByColumn[col.id] = []);
+      data.columns.forEach(col => tasksByColumn[col.id] = []);
       
-      tasks.forEach(task => {
-        if (tasksByColumn[task.column]) {
-          tasksByColumn[task.column].push(task);
+      data.tasks.forEach(task => {
+        const effectiveColumn = getEffectiveColumn(task);
+        if (tasksByColumn[effectiveColumn]) {
+          tasksByColumn[effectiveColumn].push({...task, effectiveColumn});
         }
       });
       
       // Update stats
-      columns.forEach(col => {
+      data.columns.forEach(col => {
         const statEl = document.getElementById('stat-' + col.id);
         if (statEl) statEl.textContent = tasksByColumn[col.id].length;
       });
       
-      columns.forEach(col => {
+      data.columns.forEach(col => {
         const column = document.createElement('div');
         column.className = 'column';
         column.dataset.id = col.id;
         
-        const colTasks = tasksByColumn[col.id];
+        const tasks = tasksByColumn[col.id];
         
         column.innerHTML = `
           <div class="column-header">
             <span>${col.name}</span>
-            <span class="count">${colTasks.length}</span>
+            <span class="count">${tasks.length}</span>
           </div>
           <div class="column-content">
-            ${colTasks.length === 0 ? '<div class="empty-state">No tasks</div>' : ''}
-            ${colTasks.map(task => {
-              const taskComments = comments[task.id] || [];
+            ${tasks.length === 0 ? '<div class="empty-state">No tasks</div>' : ''}
+            ${tasks.map(task => {
+              const comments = getTaskComments(task.id);
+              const hasComments = comments.length > 0;
               return `
                 <div class="task" data-id="${task.id}" onclick="openModal('${task.id}')">
                   <div class="task-title">
                     ${task.title}
-                    ${taskComments.length > 0 ? `<span class="task-comment-indicator">💬 ${taskComments.length}</span>` : ''}
+                    ${hasComments ? `<span class="task-comment-indicator">💬 ${comments.length}</span>` : ''}
                   </div>
                   ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
                   <div class="task-meta">
@@ -775,17 +665,18 @@
       });
     }
     
-    // Open task modal
     function openModal(taskId) {
       currentTaskId = taskId;
-      const task = tasks.find(t => t.id === taskId);
+      const task = boardData.tasks.find(t => t.id === taskId);
       if (!task) return;
+      
+      const effectiveColumn = getEffectiveColumn(task);
       
       document.getElementById('modal-title').textContent = task.title;
       
       const statusBadge = document.getElementById('modal-status');
-      statusBadge.textContent = task.column.replace('-', ' ');
-      statusBadge.className = 'status-badge ' + task.column;
+      statusBadge.textContent = effectiveColumn.replace('-', ' ');
+      statusBadge.className = 'status-badge ' + effectiveColumn;
       
       // Description
       const descSection = document.getElementById('modal-description-section');
@@ -801,8 +692,20 @@
       if (task.deliverable) {
         delivSection.style.display = 'block';
         const delivLink = document.getElementById('modal-deliverable');
-        delivLink.href = task.deliverable;
-        document.getElementById('modal-deliverable-path').textContent = task.deliverable;
+        const delivPath = document.getElementById('modal-deliverable-path');
+        
+        // Convert local path to GitHub raw URL
+        const githubBase = 'https://github.com/ddeleon82/conrad-kanban/blob/main';
+        const repoBase = 'https://raw.githubusercontent.com/ddeleon82/conrad-kanban/main';
+        
+        if (task.deliverable.startsWith('/clawd/')) {
+          // Link to the main clawd repo docs
+          const docPath = task.deliverable.replace('/clawd/', '');
+          delivLink.href = `https://github.com/ddeleon82/clawd/blob/main/${docPath}`;
+        } else {
+          delivLink.href = task.deliverable;
+        }
+        delivPath.textContent = task.deliverable;
       } else {
         delivSection.style.display = 'none';
       }
@@ -833,17 +736,16 @@
       document.getElementById('modal-overlay').classList.add('open');
     }
     
-    // Render comments in modal
     function renderComments(taskId) {
       const commentsList = document.getElementById('comments-list');
-      const taskComments = comments[taskId] || [];
+      const comments = getTaskComments(taskId);
       
-      if (taskComments.length === 0) {
+      if (comments.length === 0) {
         commentsList.innerHTML = '<div class="no-comments">No comments yet</div>';
         return;
       }
       
-      commentsList.innerHTML = taskComments.map(c => `
+      commentsList.innerHTML = comments.map(c => `
         <div class="comment">
           <div class="comment-header">
             <div class="comment-author">
@@ -868,166 +770,55 @@
       currentTaskId = null;
     }
     
-    // Add comment to Supabase
-    async function addComment() {
+    function addComment() {
       const input = document.getElementById('comment-input');
-      const btn = document.getElementById('comment-btn');
       const text = input.value.trim();
-      
       if (!text || !currentTaskId) return;
       
-      btn.disabled = true;
-      btn.textContent = 'Saving...';
+      const comment = {
+        author: 'dom',
+        text: text,
+        timestamp: new Date().toISOString()
+      };
       
-      const { data, error } = await supabaseClient
-        .from('comments')
-        .insert({
-          task_id: currentTaskId,
-          author: 'dom',
-          text: text
-        })
-        .select()
-        .single();
-      
-      if (error) {
-        console.error('Error adding comment:', error);
-        showToast('Failed to add comment', true);
-        btn.disabled = false;
-        btn.textContent = 'Add Comment';
-        return;
+      if (!localComments[currentTaskId]) {
+        localComments[currentTaskId] = [];
       }
-      
-      // Add to local state
-      if (!comments[currentTaskId]) comments[currentTaskId] = [];
-      comments[currentTaskId].push({
-        id: data.id,
-        author: data.author,
-        text: data.text,
-        timestamp: data.created_at
-      });
+      localComments[currentTaskId].push(comment);
+      localStorage.setItem('kanban-comments', JSON.stringify(localComments));
       
       input.value = '';
-      btn.disabled = false;
-      btn.textContent = 'Add Comment';
-      
       renderComments(currentTaskId);
-      renderBoard();
-      showToast('Comment added!');
+      renderBoard(boardData); // Re-render to move task to To Do
+      
+      // Update modal status badge
+      const statusBadge = document.getElementById('modal-status');
+      statusBadge.textContent = 'to do';
+      statusBadge.className = 'status-badge todo';
+      
+      // Show toast
+      showToast();
     }
     
-    function showToast(message, isError = false) {
+    function showToast() {
       const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = 'toast' + (isError ? ' error' : '');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
     
-    // Set up real-time subscriptions
-    function setupRealtime() {
-      // Subscribe to task changes
-      supabaseClient
-        .channel('tasks-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, (payload) => {
-          console.log('Task change:', payload);
-          handleTaskChange(payload);
-        })
-        .subscribe();
-      
-      // Subscribe to comment changes
-      supabaseClient
-        .channel('comments-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, (payload) => {
-          console.log('Comment change:', payload);
-          handleCommentChange(payload);
-        })
-        .subscribe();
-    }
-    
-    function handleTaskChange(payload) {
-      const { eventType, new: newRecord, old: oldRecord } = payload;
-      
-      if (eventType === 'INSERT') {
-        const task = {
-          id: newRecord.id,
-          title: newRecord.title,
-          description: newRecord.description,
-          column: newRecord.column_id,
-          assignee: newRecord.assignee,
-          priority: newRecord.priority,
-          deliverable: newRecord.deliverable,
-          notes: newRecord.notes,
-          completedAt: newRecord.completed_at
-        };
-        tasks.push(task);
-        renderBoard();
-        highlightTask(task.id);
-        showToast(`New task: ${task.title}`);
-      } else if (eventType === 'UPDATE') {
-        const idx = tasks.findIndex(t => t.id === newRecord.id);
-        if (idx >= 0) {
-          tasks[idx] = {
-            ...tasks[idx],
-            title: newRecord.title,
-            description: newRecord.description,
-            column: newRecord.column_id,
-            assignee: newRecord.assignee,
-            priority: newRecord.priority,
-            deliverable: newRecord.deliverable,
-            notes: newRecord.notes,
-            completedAt: newRecord.completed_at
-          };
-          renderBoard();
-          highlightTask(newRecord.id);
-        }
-      } else if (eventType === 'DELETE') {
-        tasks = tasks.filter(t => t.id !== oldRecord.id);
-        renderBoard();
-      }
-    }
-    
-    function handleCommentChange(payload) {
-      const { eventType, new: newRecord } = payload;
-      
-      if (eventType === 'INSERT') {
-        const taskId = newRecord.task_id;
-        if (!comments[taskId]) comments[taskId] = [];
-        comments[taskId].push({
-          id: newRecord.id,
-          author: newRecord.author,
-          text: newRecord.text,
-          timestamp: newRecord.created_at
-        });
-        
-        renderBoard();
-        if (currentTaskId === taskId) {
-          renderComments(taskId);
-        }
-      }
-    }
-    
-    function highlightTask(taskId) {
-      setTimeout(() => {
-        const taskEl = document.querySelector(`.task[data-id="${taskId}"]`);
-        if (taskEl) {
-          taskEl.classList.add('highlight');
-          setTimeout(() => taskEl.classList.remove('highlight'), 2000);
-        }
-      }, 100);
-    }
-    
-    // Event listeners
+    // Close modal on overlay click
     document.getElementById('modal-overlay').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
     });
     
+    // Close modal on Escape key
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeModal();
     });
     
-    // Initialize
-    loadTasks();
-    setupRealtime();
+    loadBoard();
+    // Auto-refresh every 30 seconds
+    setInterval(loadBoard, 30000);
   </script>
 </body>
 </html>
