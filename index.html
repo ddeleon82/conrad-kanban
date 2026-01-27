@@ -660,17 +660,30 @@
     
     // Load all tasks from Supabase
     async function loadTasks() {
+      console.log('loadTasks called');
       setSyncStatus('syncing', 'Loading...');
       
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .order('created_at', { ascending: true });
-      
-      if (error) {
-        console.error('Error loading tasks:', error);
-        setSyncStatus('error', 'Connection error');
-        showToast('Failed to load tasks', true);
+      let data;
+      try {
+        console.log('Fetching from Supabase...');
+        const response = await supabase
+          .from('tasks')
+          .select('*')
+          .order('created_at', { ascending: true });
+        
+        console.log('Supabase response:', response);
+        
+        if (response.error) {
+          console.error('Error loading tasks:', response.error);
+          setSyncStatus('error', 'Connection error');
+          showToast('Failed to load tasks: ' + response.error.message, true);
+          return;
+        }
+        data = response.data;
+      } catch (e) {
+        console.error('Exception in loadTasks:', e);
+        setSyncStatus('error', 'Error');
+        showToast('Exception: ' + e.message, true);
         return;
       }
       
