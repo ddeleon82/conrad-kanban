@@ -13,6 +13,152 @@
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       min-height: 100vh;
       color: #e4e4e7;
+      display: flex;
+    }
+    
+    /* ── Left Sidebar ── */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: rgba(0,0,0,0.4);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 20px;
+      gap: 24px;
+    }
+    
+    .sidebar-avatar {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+    
+    .sidebar-avatar svg {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.1);
+      transition: border-color 0.3s;
+    }
+    
+    .sidebar-avatar.online svg { border-color: #34d399; }
+    .sidebar-avatar.working svg { border-color: #fbbf24; }
+    .sidebar-avatar.idle svg { border-color: #60a5fa; }
+    .sidebar-avatar.offline svg { border-color: #71717a; }
+    
+    .status-ring {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 3px solid #1a1a2e;
+      transition: background 0.3s;
+    }
+    
+    .status-ring.online { background: #34d399; }
+    .status-ring.working { background: #fbbf24; animation: pulse 2s infinite; }
+    .status-ring.idle { background: #60a5fa; }
+    .status-ring.offline { background: #71717a; }
+    
+    .sidebar-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    
+    .sidebar-role {
+      font-size: 12px;
+      color: #71717a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: -16px;
+    }
+    
+    .sidebar-status-block {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .status-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #71717a;
+    }
+    
+    .status-value {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .status-value .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .status-value .dot.online { background: #34d399; }
+    .status-value .dot.working { background: #fbbf24; animation: pulse 2s infinite; }
+    .status-value .dot.idle { background: #60a5fa; }
+    .status-value .dot.offline { background: #71717a; }
+    
+    .current-task-text {
+      font-size: 13px;
+      color: #a1a1aa;
+      line-height: 1.5;
+      min-height: 40px;
+    }
+    
+    .ready-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      align-self: flex-start;
+    }
+    
+    .ready-badge.ready {
+      background: rgba(52, 211, 153, 0.15);
+      color: #34d399;
+    }
+    
+    .ready-badge.busy {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+    }
+    
+    .ready-badge.unavailable {
+      background: rgba(113, 113, 122, 0.15);
+      color: #71717a;
+    }
+    
+    .sidebar-updated {
+      font-size: 11px;
+      color: #52525b;
+      margin-top: auto;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
     }
     
     header {
@@ -536,6 +682,50 @@
   </style>
 </head>
 <body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-avatar offline" id="avatar-wrap">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bg-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6366f1"/>
+            <stop offset="100%" stop-color="#8b5cf6"/>
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="50" fill="url(#bg-grad)"/>
+        <text x="50" y="58" text-anchor="middle" font-size="42" fill="white" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif">🎭</text>
+      </svg>
+      <div class="status-ring offline" id="status-ring"></div>
+    </div>
+    <div class="sidebar-name">Conrad</div>
+    <div class="sidebar-role">AI Companion</div>
+    
+    <div class="sidebar-status-block">
+      <div>
+        <div class="status-label">Status</div>
+        <div class="status-value">
+          <span class="dot offline" id="status-dot"></span>
+          <span id="status-text">Offline</span>
+        </div>
+      </div>
+      <div>
+        <div class="status-label">Currently</div>
+        <div class="current-task-text" id="current-task">—</div>
+      </div>
+      <div>
+        <div class="status-label">Availability</div>
+        <div class="ready-badge unavailable" id="ready-badge">
+          <span id="ready-icon">⏸</span>
+          <span id="ready-text">Unavailable</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sidebar-updated" id="last-update">Last seen: —</div>
+  </aside>
+  
+  <!-- Main Content -->
+  <div class="main-content">
   <header>
     <h1><span>🎭</span> Conrad's Kanban</h1>
     <div class="header-right">
@@ -631,6 +821,7 @@
   </div>
   
   <div class="toast" id="toast">Comment added!</div>
+  </div><!-- /main-content -->
 
   <script>
     // Supabase config
@@ -1025,9 +1216,115 @@
       if (e.key === 'Escape') closeModal();
     });
     
+    // ── Sidebar Status ──
+    const statusConfig = {
+      online:  { label: 'Online',  emoji: '🟢' },
+      working: { label: 'Working', emoji: '⚡' },
+      idle:    { label: 'Idle',    emoji: '💤' },
+      offline: { label: 'Offline', emoji: '⏸' }
+    };
+    
+    function updateSidebar(record) {
+      if (!record) return;
+      const status = record.status || 'offline';
+      const cfg = statusConfig[status] || statusConfig.offline;
+      
+      // Avatar ring
+      document.getElementById('avatar-wrap').className = 'sidebar-avatar ' + status;
+      document.getElementById('status-ring').className = 'status-ring ' + status;
+      
+      // Status text
+      document.getElementById('status-dot').className = 'dot ' + status;
+      document.getElementById('status-text').textContent = cfg.label;
+      
+      // Current task
+      document.getElementById('current-task').textContent = record.current_task || '—';
+      
+      // Ready badge
+      const badge = document.getElementById('ready-badge');
+      const readyIcon = document.getElementById('ready-icon');
+      const readyText = document.getElementById('ready-text');
+      
+      if (status === 'offline') {
+        badge.className = 'ready-badge unavailable';
+        readyIcon.textContent = '⏸';
+        readyText.textContent = 'Unavailable';
+      } else if (record.ready_for_tasks) {
+        badge.className = 'ready-badge ready';
+        readyIcon.textContent = '✅';
+        readyText.textContent = 'Ready for tasks';
+      } else {
+        badge.className = 'ready-badge busy';
+        readyIcon.textContent = '🔒';
+        readyText.textContent = 'Busy';
+      }
+      
+      // Last heartbeat
+      if (record.last_heartbeat) {
+        const ago = timeSince(new Date(record.last_heartbeat));
+        document.getElementById('last-update').textContent = 'Last seen: ' + ago;
+      }
+    }
+    
+    function timeSince(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      if (seconds < 60) return 'just now';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return minutes + 'm ago';
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return hours + 'h ago';
+      return Math.floor(hours / 24) + 'd ago';
+    }
+    
+    // Refresh "last seen" every 30s
+    setInterval(() => {
+      const el = document.getElementById('last-update');
+      if (el._lastHeartbeat) {
+        el.textContent = 'Last seen: ' + timeSince(new Date(el._lastHeartbeat));
+      }
+    }, 30000);
+    
+    async function loadAgentStatus() {
+      const { data, error } = await supabaseClient
+        .from('agent_status')
+        .select('*')
+        .eq('id', 'conrad')
+        .single();
+      
+      if (error) {
+        console.log('agent_status table not found or empty — showing offline');
+        updateSidebar({ status: 'offline', current_task: null, ready_for_tasks: false });
+        return;
+      }
+      
+      // Check if heartbeat is stale (>5 min = offline)
+      if (data.last_heartbeat) {
+        const age = (Date.now() - new Date(data.last_heartbeat).getTime()) / 1000;
+        if (age > 300) data.status = 'offline';
+        document.getElementById('last-update')._lastHeartbeat = data.last_heartbeat;
+      }
+      
+      updateSidebar(data);
+    }
+    
+    function setupStatusRealtime() {
+      supabaseClient
+        .channel('agent-status-changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'agent_status' }, (payload) => {
+          console.log('Agent status change:', payload);
+          if (payload.new) {
+            document.getElementById('last-update')._lastHeartbeat = payload.new.last_heartbeat;
+            updateSidebar(payload.new);
+          }
+        })
+        .subscribe();
+    }
+    
     // Initialize
     loadTasks();
+    loadAgentStatus();
     setupRealtime();
+    setupStatusRealtime();
   </script>
 </body>
 </html>

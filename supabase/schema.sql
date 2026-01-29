@@ -78,3 +78,28 @@ CREATE TRIGGER tasks_updated_at
 -- Enable realtime for tasks and comments
 ALTER PUBLICATION supabase_realtime ADD TABLE tasks;
 ALTER PUBLICATION supabase_realtime ADD TABLE comments;
+
+-- Agent Status table for sidebar presence indicator
+CREATE TABLE IF NOT EXISTS agent_status (
+  id TEXT PRIMARY KEY DEFAULT 'conrad',
+  status TEXT NOT NULL DEFAULT 'offline',
+  current_task TEXT,
+  ready_for_tasks BOOLEAN NOT NULL DEFAULT true,
+  last_heartbeat TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE agent_status ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read agent_status" ON agent_status FOR SELECT USING (true);
+CREATE POLICY "Public insert agent_status" ON agent_status FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public update agent_status" ON agent_status FOR UPDATE USING (true);
+ALTER PUBLICATION supabase_realtime ADD TABLE agent_status;
+
+CREATE TRIGGER agent_status_updated_at
+  BEFORE UPDATE ON agent_status
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
+INSERT INTO agent_status (id, status, current_task, ready_for_tasks)
+VALUES ('conrad', 'online', NULL, true)
+ON CONFLICT (id) DO NOTHING;
