@@ -33,15 +33,23 @@ ConvoBot is an AI-powered conversation management platform designed to replace C
 
 ### 1.2 Key Differentiator
 
-**Conversational Programming:** Unlike competitors that require technical flow builders or prompt engineering, ConvoBot allows users to configure bot behavior through natural conversation. Users simply tell the bot how they want it to behave, what personality to adopt, and what outcomes to achieve—the system translates this into working automation.
+**Conversational Onboarding → Structured Prompts:** The magic is deceptively simple. On the frontend, users experience an intuitive chat-based onboarding—like hiring a new employee, not configuring software. On the backend, it's a structured prompt system and an LLM. The onboarding conversation builds system prompts behind the scenes. No flow builders. No complex forms. Just talk.
 
-### 1.3 Core Value Proposition
+This is the fundamental architectural insight: **every AI agent is just a system prompt + an LLM + a knowledge base.** The hard part isn't the technology—it's making configuration feel effortless. Competitors like Appointwise use traditional form-based setup. We use conversation.
+
+### 1.3 Architecture in a Sentence
+
+> "On the frontend it's an intuitive process, on the backend it's simply a structured prompt system and an LLM."
+
+A client like Jacob Metzger would have a **Coach** (weekly check-ins), an **Appointment Setter** (IG DM engagement → booking), and a **Closer** (present offers, handle objections). All three share the same company knowledge base but have different system prompts—generated through conversational onboarding.
+
+### 1.4 Core Value Proposition
 
 - **For Freedom & Coffee:** A proprietary solution that reduces dependency on third-party tools while increasing margins and control
 - **For Agency Clients:** 24/7 intelligent lead engagement that books appointments, qualifies prospects, and nurtures relationships without human intervention
 - **For End Users (Leads/Customers):** Natural, helpful conversations that feel human and provide value
 
-### 1.4 Business Goals
+### 1.5 Business Goals
 
 | Goal | Target | Timeline |
 |------|--------|----------|
@@ -77,13 +85,23 @@ ConvoBot is an AI-powered conversation management platform designed to replace C
 
 The fundamental issue is that existing solutions treat conversation automation as a **programming problem** (flows, states, conditions) rather than a **communication problem** (goals, personality, context). This forces non-technical users to think like developers, while simultaneously constraining what's possible.
 
+Even "simple" competitors like Appointwise ($97-$297/mo) still use traditional form-based onboarding. They've simplified the UI but not the mental model. Users still think in terms of configuration fields, not job descriptions.
+
 ### 2.3 Opportunity
 
-By leveraging modern LLMs with a conversational configuration interface, we can create a system that:
-- Is easier to set up than competitors
-- Produces more natural conversations
-- Handles edge cases gracefully
-- Gives Freedom & Coffee ownership and control
+The insight is simple: **an AI agent is just a structured system prompt + an LLM.** The hard part was always prompt engineering—but what if the onboarding *is* the prompt engineering?
+
+By having a conversation with the user, we can:
+- Extract personality, goals, knowledge, and rules naturally
+- Build a structured system prompt behind the scenes
+- Let users configure through language they already know ("I want someone who...")
+- Support multi-agent setups (coach + setter + closer) as naturally as describing a team
+
+This gives Freedom & Coffee:
+- Easier setup than any competitor (chat > forms > flow builders)
+- More natural conversations (structured prompts > rigid flows)
+- Graceful edge case handling (LLM flexibility > decision trees)
+- Full ownership and control
 
 ---
 
@@ -511,18 +529,138 @@ When humans override bot responses, the system learns:
 
 ### 6.1 Design Philosophy
 
-The conversational programming interface is the core differentiator. It must feel like talking to a smart assistant, not filling out forms.
+The conversational onboarding is the core differentiator. It must feel like **hiring a new employee**, not configuring software. The user talks, and behind the scenes we build structured system prompts.
+
+**The Architectural Truth:**
+Every AI agent = system prompt + LLM + knowledge base. That's it. The entire product is a UX layer that makes creating these prompts feel effortless. Competitors like Appointwise have fast form-based setup. CloseBot has flow builders. We have conversation. Same output, radically different input experience.
 
 **Principles:**
-1. **Natural First:** Accept natural language, don't force structure
+1. **Hiring, Not Configuring:** The user is telling us about their new "employee"—not filling out a form
 2. **Guided Discovery:** Ask good questions to elicit complete configuration
 3. **Show, Don't Tell:** Preview behavior instead of describing settings
 4. **Iterative Refinement:** Easy to adjust through continued conversation
 5. **Sensible Defaults:** Work well out of the box, customization optional
+6. **Multi-Agent by Default:** Most businesses need 2-3 agents (setter, closer, support). Guide them there naturally
 
-### 6.2 Configuration Conversation Flow
+### 6.2 What the Onboarding Actually Builds
 
-#### 6.2.1 Initial Setup Conversation
+Behind the scenes, conversational onboarding produces **structured system prompts**—not flow diagrams, not decision trees. Each agent is simply:
+
+1. **A system prompt** (personality, rules, goals, constraints)
+2. **A shared knowledge base** (company info, products, FAQs)
+3. **An LLM** (Claude, GPT-4, etc.)
+
+That's it. The onboarding chat is the UX sugar that makes prompt engineering feel like hiring.
+
+### 6.3 Real-World Example: Living Leadership International
+
+Jacob Metzger runs Living Leadership International. He needs three agents that share the same company knowledge but serve different roles:
+
+| Agent | Role | Key Behavior | System Prompt Focus |
+|-------|------|-------------|-------------------|
+| **Scout** (Coach) | Weekly check-ins for Masculine Challenge participants | Encouraging, casual, 1-2 follow-ups then close gracefully | Phase-aware coaching, celebrate wins, short supportive encouragement |
+| **Dom** (Appointment Setter) | IG DM engagement → qualify → route to booking | Leader voice, not marketer. Short, human replies. Emojis sparingly | Classify intent, discover transformation profile (A→B gap), route to booking link |
+| **Closer** | Present Breakthrough Session ($997), handle objections | Confident, authentic authority. Bridge need to solution | Solution presentation, objection resolution, send booking link |
+
+**Shared Knowledge Base:**
+- Products: Breakthrough Session ($997), 90-Day Masculine Challenge, Relationship Planner, Crypto Strategy
+- Business email: Livingleadership.co@gmail.com
+- Booking: Link to Breakthrough Session (never book directly in chat)
+- Off-topic: Pivot back to leadership, relationships, wealth
+- Business inquiries: Send email, don't imply interest on Jacob's behalf
+
+**What the onboarding conversation looks like:**
+
+```
+ConvoBot: "Hey! Let's get your AI team set up. What's the business?"
+
+Jacob: "Living Leadership International. I coach men on leadership, 
+       relationships, and building wealth."
+
+ConvoBot: "Love it. How many agents do you need, and what should 
+          each one do?"
+
+Jacob: "Three. First one is a coach — does weekly check-ins with 
+       guys in my Masculine Challenge program. Second is an 
+       appointment setter for Instagram DMs. Third closes — 
+       presents my Breakthrough Session and handles objections."
+
+ConvoBot: "Got it — Coach, Setter, and Closer. Let's start with 
+          the Coach. What's the vibe? Drill sergeant or 
+          encouraging buddy?"
+
+Jacob: "Encouraging. Casual. Like a friend who's got your back. 
+       His name is Scout."
+
+ConvoBot: "Scout — friendly, encouraging, has their back. 
+          What does a check-in look like? What should Scout 
+          ask about?"
+
+Jacob: "The challenge has 3 phases, each about a month. Scout 
+       should know what phase they're in, celebrate wins, ask 
+       one question about their week, and keep it short. 
+       Not a therapist."
+
+ConvoBot: "Perfect. Scout checks in based on their phase, 
+          celebrates progress, asks one natural question, 
+          keeps it casual. No therapy sessions. 
+          
+          Ready to set up the Appointment Setter next?"
+
+[Continues through each agent...]
+```
+
+**What gets built behind the scenes** — a structured prompt:
+
+```json
+{
+  "agents": [
+    {
+      "name": "Scout",
+      "role": "coach",
+      "systemPrompt": "You are Scout, a weekly check-in coach for the Masculine Leadership Challenge. Recognize effort, celebrate wins, ask one natural question about their week. Casual and friendly—never like a therapist. 1-2 follow-ups max, then close gracefully. 3 phases, each ~1 month...",
+      "knowledgeBase": "shared:living-leadership",
+      "channels": ["sms", "instagram"]
+    },
+    {
+      "name": "Dom",
+      "role": "appointment_setter",
+      "systemPrompt": "You are Dom, Jacob's assistant. Clear, simple sentences. Speak like a leader, not a marketer. Emojis sparingly. Never em dashes. Introduce yourself early. Classify intent, discover transformation profile, route to booking link...",
+      "knowledgeBase": "shared:living-leadership",
+      "channels": ["instagram"]
+    },
+    {
+      "name": "Closer",
+      "role": "closer",
+      "systemPrompt": "You are Dom's Solution Specialist. Present Jacob's Breakthrough Session ($997) with confident, authentic authority. Bridge their discovered need to Jacob's solution. Handle objections with calm leadership...",
+      "knowledgeBase": "shared:living-leadership",
+      "channels": ["instagram"]
+    }
+  ],
+  "sharedKnowledge": {
+    "company": "Living Leadership International",
+    "products": [
+      {"name": "Breakthrough Session", "price": "$997", "type": "flagship"},
+      {"name": "90-Day Masculine Challenge", "type": "program"},
+      {"name": "Relationship Planner", "type": "product"},
+      {"name": "Crypto Strategy", "type": "service"}
+    ],
+    "rules": [
+      "Never book directly in chat — send booking link",
+      "Off-topic → pivot to leadership, relationships, wealth",
+      "Business inquiries → Livingleadership.co@gmail.com",
+      "Don't imply interest/alignment on Jacob's behalf",
+      "One message at a time"
+    ]
+  }
+}
+```
+
+**Key insight:** Three "employees" with very different behaviors, all powered by the same LLM, differentiated entirely by their system prompts. The conversational onboarding is just a friendly way to write those prompts.
+
+### 6.4 Configuration Conversation Flow
+
+#### 6.4.1 Initial Setup Conversation (Generic Example)
 
 ```
 ConvoBot: "Hey! I'm ready to help you set up your AI assistant. 
@@ -558,7 +696,7 @@ ConvoBot: "Love it! Smith Plumbing - friendly, family-business vibe.
 [Continues until configuration is complete]
 ```
 
-#### 6.2.2 Configuration Categories
+#### 6.4.2 Configuration Categories
 
 | Category | What's Captured | How It's Asked |
 |----------|-----------------|----------------|
@@ -570,9 +708,9 @@ ConvoBot: "Love it! Smith Plumbing - friendly, family-business vibe.
 | **Handoffs** | When to escalate | Scenario-based questions |
 | **Scheduling** | Hours, booking rules | Practical questions |
 
-### 6.3 Behavior Preview & Testing
+### 6.5 Behavior Preview & Testing
 
-#### 6.3.1 Live Preview Mode
+#### 6.5.1 Live Preview Mode
 
 ```
 ConvoBot: "Want to test how I'll respond? Send me a message like 
@@ -595,7 +733,7 @@ ConvoBot: [Back to Config Mode]
 Let me know what to adjust."
 ```
 
-#### 6.3.2 Scenario Testing
+#### 6.5.2 Scenario Testing
 
 ```
 User: "What if someone is really angry?"
@@ -618,9 +756,9 @@ and escalate to a real person ASAP. I've flagged this for immediate
 human follow-up. Does that approach work for you?"
 ```
 
-### 6.4 Knowledge Base Configuration
+### 6.6 Knowledge Base Configuration
 
-#### 6.4.1 Document Ingestion
+#### 6.6.1 Document Ingestion
 
 ```
 ConvoBot: "If you have any documents - FAQ pages, service descriptions, 
@@ -643,7 +781,7 @@ ConvoBot: "Smart - I'll keep pricing vague and focus on value.
           If they push, I'll offer to have someone call with a quote."
 ```
 
-#### 6.4.2 Q&A Training
+#### 6.6.2 Q&A Training
 
 ```
 ConvoBot: "What questions do you get asked most often that I should 
@@ -659,9 +797,9 @@ ConvoBot: "Perfect! I'll mention the Rinnai certification - that's
           a nice credibility boost. Any other common questions?"
 ```
 
-### 6.5 Modification Interface
+### 6.7 Modification Interface
 
-#### 6.5.1 Conversational Adjustments
+#### 6.7.1 Conversational Adjustments
 
 ```
 User: "People are getting confused when you mention the service call fee"
@@ -680,7 +818,7 @@ ConvoBot: "Done! I'll only bring up the service call fee as part of
           the booking confirmation. Let me know if that helps!"
 ```
 
-#### 6.5.2 Learning from Corrections
+#### 6.7.2 Learning from Corrections
 
 ```
 [User reviews conversation log]
@@ -697,7 +835,7 @@ ConvoBot: "Got it - Saturday 8am-2pm added. I'll offer those slots
           going forward!"
 ```
 
-### 6.6 Configuration Storage
+### 6.8 Configuration Storage
 
 All configuration is stored as structured data derived from conversation:
 
@@ -1605,6 +1743,22 @@ GET /api/conversations/{id}/messages
 | **Key Features** | Personas, Job Flows, multi-channel, dashboard, whitelabel |
 | **Our Advantage** | Conversational configuration, more natural AI responses, ownership/control |
 
+#### Appointwise.io
+
+| Aspect | Analysis |
+|--------|----------|
+| **Overview** | AI conversational booking platform with GHL native integration. Claims "under 30 seconds" account creation, "2 minute integration" |
+| **Strengths** | Simple pricing ($97-$297/mo), fast setup, GHL native, multi-language (17+), unlimited sub-accounts on Pro, campaign split testing, revenue analytics |
+| **Weaknesses** | **Form-based onboarding** — traditional 3-step signup (Create Account → Choose Plan → Complete Setup), not conversational. Configuration is still "fill in fields" not "tell me what you need" |
+| **Pricing** | $97/mo Business (2 agents) · $297/mo Pro (unlimited agents, unlimited sub-accounts) |
+| **Key Features** | AI conversational booking, automated follow-ups, campaign A/B testing, revenue analytics, lead dashboard, multi-language |
+| **Our Advantage** | **Chat-based onboarding is the differentiator.** Appointwise setup is fast but still feels like configuring software. Ours feels like hiring an employee. Same outcome (AI agent), completely different experience. Their agent config is form fields; ours is "tell me about your business and I'll figure out the rest." |
+
+**Appointwise Pricing Benchmark:**
+- Their $97/mo (2 agents) and $297/mo (unlimited) provides a market reference for our pricing
+- Agency model with unlimited sub-accounts at $297 validates the multi-tenant approach
+- We should match or beat their setup speed while offering a fundamentally better experience
+
 #### Synthflow AI
 
 | Aspect | Analysis |
@@ -1643,12 +1797,13 @@ GET /api/conversations/{id}/messages
 ```
                     Simple Setup
                          │
+              ConvoBot ───┤
+          (Chat Onboarding)│
                          │
-        ConvoBot ←───────┼───────→ CloseBot
-    (Conversational)     │      (Flow Builder)
+        Appointwise ─────┼───────→ CloseBot
+       (Form-Based Fast) │      (Flow Builder)
                          │
         ─────────────────┼─────────────────────
-                         │
                          │
                          │
      Voiceflow ←─────────┼───────→ Bland/Synthflow
@@ -1656,6 +1811,8 @@ GET /api/conversations/{id}/messages
                          │
                     Complex Setup
 ```
+
+**Key distinction:** Appointwise is the closest competitor in simplicity, but their "simple" is still form-based. Our "simple" is conversational. That's the gap we own.
 
 ### 11.3 Competitive Advantages
 

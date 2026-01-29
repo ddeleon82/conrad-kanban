@@ -1553,10 +1553,11 @@
         return;
       }
       
-      // Check if heartbeat is stale (>5 min = offline)
+      // Check if heartbeat is stale (>30 min = offline, >10 min = idle)
       if (data.last_heartbeat) {
         const age = (Date.now() - new Date(data.last_heartbeat).getTime()) / 1000;
-        if (age > 300) data.status = 'offline';
+        if (age > 1800) data.status = 'offline';
+        else if (age > 600 && data.status === 'online') data.status = 'idle';
         document.getElementById('last-update')._lastHeartbeat = data.last_heartbeat;
       }
       
