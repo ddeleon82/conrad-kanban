@@ -265,6 +265,28 @@
       font-size: 12px;
     }
     
+    .column-header .add-task-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: #a1a1aa;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+    
+    .column-header .add-task-btn:hover {
+      background: rgba(255,255,255,0.15);
+      color: #e4e4e7;
+      border-color: rgba(255,255,255,0.3);
+    }
+    
     .column[data-id="backlog"] .column-header { color: #a1a1aa; }
     .column[data-id="todo"] .column-header { color: #60a5fa; }
     .column[data-id="in-progress"] .column-header { color: #fbbf24; }
@@ -865,6 +887,55 @@
   </div>
   
   <div class="toast" id="toast">Comment added!</div>
+  
+  <!-- Add Task Modal -->
+  <div class="modal-overlay" id="add-task-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>New Task</h2>
+          <span class="status-badge" id="add-task-column-badge">To Do</span>
+        </div>
+        <button class="modal-close" onclick="closeAddTask()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-section">
+          <h3>Title</h3>
+          <input type="text" id="add-task-title" placeholder="Task title..." 
+            style="width:100%; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#e4e4e7; font-family:inherit; font-size:15px; outline:none;"
+            onkeydown="if(event.key==='Enter')document.getElementById('add-task-desc').focus()">
+        </div>
+        <div class="modal-section">
+          <h3>Description</h3>
+          <textarea id="add-task-desc" placeholder="Description (optional)..."
+            style="width:100%; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#e4e4e7; font-family:inherit; font-size:14px; resize:vertical; min-height:80px; outline:none;"></textarea>
+        </div>
+        <div class="modal-section">
+          <h3>Priority</h3>
+          <div style="display:flex; gap:8px;">
+            <button class="priority-btn" data-priority="high" onclick="selectPriority('high')" style="padding:8px 16px; border-radius:6px; border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.1); color:#f87171; cursor:pointer; font-family:inherit; font-size:13px;">High</button>
+            <button class="priority-btn selected" data-priority="medium" onclick="selectPriority('medium')" style="padding:8px 16px; border-radius:6px; border:1px solid rgba(251,191,36,0.3); background:rgba(251,191,36,0.2); color:#fbbf24; cursor:pointer; font-family:inherit; font-size:13px;">Medium</button>
+            <button class="priority-btn" data-priority="low" onclick="selectPriority('low')" style="padding:8px 16px; border-radius:6px; border:1px solid rgba(52,211,153,0.3); background:rgba(52,211,153,0.1); color:#34d399; cursor:pointer; font-family:inherit; font-size:13px;">Low</button>
+          </div>
+        </div>
+        <div class="modal-section">
+          <h3>Assignee</h3>
+          <div style="display:flex; gap:8px;">
+            <button class="assignee-btn" data-assignee="conrad" onclick="selectAssignee('conrad')" style="padding:8px 16px; border-radius:6px; border:1px solid rgba(99,102,241,0.3); background:rgba(99,102,241,0.2); color:#818cf8; cursor:pointer; font-family:inherit; font-size:13px;">🎭 Conrad</button>
+            <button class="assignee-btn selected" data-assignee="dom" onclick="selectAssignee('dom')" style="padding:8px 16px; border-radius:6px; border:1px solid rgba(245,158,11,0.3); background:rgba(245,158,11,0.2); color:#fbbf24; cursor:pointer; font-family:inherit; font-size:13px;">👤 Dom</button>
+          </div>
+        </div>
+        <button onclick="submitNewTask()" id="add-task-btn"
+          style="width:100%; padding:12px; border-radius:8px; border:none; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; margin-top:8px;">
+          Create Task
+        </button>
+        <p id="add-task-auth-note" style="color:#71717a; font-size:12px; text-align:center; margin-top:8px; display:none;">
+          Authenticating...
+        </p>
+      </div>
+    </div>
+  </div>
+  
   </div><!-- /main-content -->
 
   <script>
@@ -980,7 +1051,10 @@
         column.innerHTML = `
           <div class="column-header">
             <span>${col.name}</span>
-            <span class="count">${colTasks.length}</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <span class="count">${colTasks.length}</span>
+              <button class="add-task-btn" onclick="openAddTask('${col.id}')" title="Add task">+</button>
+            </div>
           </div>
           <div class="column-content">
             ${colTasks.length === 0 ? '<div class="empty-state">No tasks</div>' : ''}
@@ -1260,6 +1334,144 @@
       if (e.key === 'Escape') closeModal();
     });
     
+    // ── Add Task ──
+    let addTaskColumn = 'todo';
+    let addTaskPriority = 'medium';
+    let addTaskAssignee = 'dom';
+    let authToken = null;
+    
+    async function getAuthToken() {
+      if (authToken) return authToken;
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: 'conrad@freedomandcoffee.co',
+        password: 'ConradKanban2026!'
+      });
+      if (error) {
+        console.error('Auth failed:', error);
+        return null;
+      }
+      authToken = data.session.access_token;
+      return authToken;
+    }
+    
+    function openAddTask(columnId) {
+      addTaskColumn = columnId;
+      addTaskPriority = 'medium';
+      addTaskAssignee = 'dom';
+      
+      const badge = document.getElementById('add-task-column-badge');
+      badge.textContent = columnId.replace('-', ' ');
+      badge.className = 'status-badge ' + columnId;
+      
+      document.getElementById('add-task-title').value = '';
+      document.getElementById('add-task-desc').value = '';
+      document.getElementById('add-task-auth-note').style.display = 'none';
+      
+      // Reset priority/assignee buttons
+      document.querySelectorAll('.priority-btn').forEach(b => {
+        b.style.opacity = b.dataset.priority === 'medium' ? '1' : '0.5';
+      });
+      document.querySelectorAll('.assignee-btn').forEach(b => {
+        b.style.opacity = b.dataset.assignee === 'dom' ? '1' : '0.5';
+      });
+      
+      document.getElementById('add-task-overlay').classList.add('open');
+      setTimeout(() => document.getElementById('add-task-title').focus(), 100);
+    }
+    
+    function closeAddTask() {
+      document.getElementById('add-task-overlay').classList.remove('open');
+    }
+    
+    function selectPriority(p) {
+      addTaskPriority = p;
+      document.querySelectorAll('.priority-btn').forEach(b => {
+        b.style.opacity = b.dataset.priority === p ? '1' : '0.5';
+      });
+    }
+    
+    function selectAssignee(a) {
+      addTaskAssignee = a;
+      document.querySelectorAll('.assignee-btn').forEach(b => {
+        b.style.opacity = b.dataset.assignee === a ? '1' : '0.5';
+      });
+    }
+    
+    async function submitNewTask() {
+      const title = document.getElementById('add-task-title').value.trim();
+      if (!title) { document.getElementById('add-task-title').focus(); return; }
+      
+      const btn = document.getElementById('add-task-btn');
+      const note = document.getElementById('add-task-auth-note');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+      note.textContent = 'Authenticating...';
+      note.style.display = 'block';
+      
+      const token = await getAuthToken();
+      if (!token) {
+        note.textContent = 'Authentication failed. Try again.';
+        btn.disabled = false;
+        btn.textContent = 'Create Task';
+        return;
+      }
+      
+      note.textContent = 'Saving task...';
+      
+      const desc = document.getElementById('add-task-desc').value.trim();
+      
+      const { data, error } = await supabaseClient
+        .from('tasks')
+        .insert({
+          title: title,
+          description: desc || null,
+          column_id: addTaskColumn,
+          assignee: addTaskAssignee,
+          priority: addTaskPriority
+        })
+        .select()
+        .single();
+      
+      btn.disabled = false;
+      btn.textContent = 'Create Task';
+      note.style.display = 'none';
+      
+      if (error) {
+        console.error('Insert failed:', error);
+        // Try with auth header directly
+        const res = await fetch(SUPABASE_URL + '/rest/v1/tasks', {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({
+            title: title,
+            description: desc || null,
+            column_id: addTaskColumn,
+            assignee: addTaskAssignee,
+            priority: addTaskPriority
+          })
+        });
+        
+        if (!res.ok) {
+          showToast('Failed to create task', true);
+          return;
+        }
+      }
+      
+      closeAddTask();
+      showToast('Task created: ' + title);
+      loadTasks(); // Refresh
+    }
+    
+    // Add task overlay click-to-close
+    document.getElementById('add-task-overlay')?.addEventListener('click', function(e) {
+      if (e.target === this) closeAddTask();
+    });
+    
     // ── Sidebar Status ──
     const statusConfig = {
       online:  { label: 'Online',  emoji: '🟢' },
@@ -1364,11 +1576,23 @@
         .subscribe();
     }
     
+    // Auto-authenticate the Supabase client for writes
+    async function autoAuth() {
+      const { data } = await supabaseClient.auth.getSession();
+      if (!data.session) {
+        await supabaseClient.auth.signInWithPassword({
+          email: 'conrad@freedomandcoffee.co',
+          password: 'ConradKanban2026!'
+        });
+      }
+    }
+    
     // Initialize
     loadTasks();
     loadAgentStatus();
     setupRealtime();
     setupStatusRealtime();
+    autoAuth();
   </script>
 </body>
 </html>
